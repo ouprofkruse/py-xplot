@@ -9,9 +9,18 @@ GLYPHS = {"vtick":"\u2502", "htick":"\u2501", "dtick":"\u2577", "utick":"\u2575"
               "plus":"\u002B", "+":"+", "box":"\u25A2", "diamond":"\u2662", \
                  "x":"x", "mark":"\u25CE" }
 
+COLOR = ("k", "b", "g", "r", "c", "m", "y", "k")
+
 command_list=[]
 
 def command_parse(data_in):
+    def set_color(cmd,n):
+        cc=0
+        if (len(cmd) > n):
+            cc=int(cmd[n].strip())
+            cc = min(cc,len(COLOR)-1)
+            cc = max(cc,0)
+            return COLOR[cc]
     j=0
     cl=[["units","",""]]
     while j<len(data_in):
@@ -36,8 +45,8 @@ def command_parse(data_in):
             cl.append(["line",[float(command[1]),float(command[3])],[float(command[2]),float(command[4])]])
         elif (command[0] == "dline"):
             cl.append(["line",[float(command[1]),float(command[3])],[float(command[2]),float(command[4])]])
-            cl.append(["glyph","mark",float(command[1]),float(command[2])])
-            cl.append(["glyph","mark",float(command[3]),float(command[4])])
+            cl.append(["glyph","mark",float(command[1]),float(command[2]),"k"])
+            cl.append(["glyph","mark",float(command[3]),float(command[4]),"k"])
         elif (command[0] == "invisible"):
             cl.append(["invis",float(command[1]),float(command[2])])
         elif (command[0] == "ctext"):
@@ -56,7 +65,7 @@ def command_parse(data_in):
             cl.append(["text",data_in[j].strip(),float(command[1]),float(command[2]),"center","top"])
             j+=1
         elif (command[0] in GLYPHS):
-            cl.append(["glyph",command[0],float(command[1]),float(command[2])])
+            cl.append(["glyph",command[0],float(command[1]),float(command[2]),set_color(command,3)])
     return cl
 
 def plotter(cl):
@@ -89,7 +98,7 @@ def plotter(cl):
             case "glyph":
                 x = item[2]
                 y = item[3]
-                ax.text(x,y,GLYPHS[item[1]],ha="center",va="center")
+                ax.text(x,y,GLYPHS[item[1]],ha="center",va="center",color=item[4])
                 limits=update_limits(limits,x,y)
             case _:
                 continue
