@@ -97,7 +97,7 @@ def plotter(cl):
     ax.set_ylim(limits[2],limits[3])
     plt.show()
 
-in_file = "demo.0"
+in_file = "demo-files/demo.0"
 if (len(sys.argv) > 1):
     in_file = sys.argv[1]
 fh = open(in_file)
