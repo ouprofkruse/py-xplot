@@ -20,7 +20,7 @@ def command_parse(data_in):
             cc=int(cmd[n].strip())
             cc = min(cc,len(COLOR)-1)
             cc = max(cc,0)
-            return COLOR[cc]
+        return COLOR[cc]
     j=0
     cl=[["units","",""]]
     while j<len(data_in):
@@ -42,11 +42,13 @@ def command_parse(data_in):
             cl[0][2] =  " ("+data_in[j].strip()+")"
             j+=1
         elif (command[0] == "line"):
-            cl.append(["line",[float(command[1]),float(command[3])],[float(command[2]),float(command[4])]])
+            cl.append(["line",[float(command[1]),float(command[3])],[float(command[2]),float(command[4])],\
+                       set_color(command,5)])
         elif (command[0] == "dline"):
-            cl.append(["line",[float(command[1]),float(command[3])],[float(command[2]),float(command[4])]])
-            cl.append(["glyph","mark",float(command[1]),float(command[2]),"k"])
-            cl.append(["glyph","mark",float(command[3]),float(command[4]),"k"])
+            cl.append(["line",[float(command[1]),float(command[3])],[float(command[2]),float(command[4])],\
+                       set_color(command,5)])
+            cl.append(["glyph","mark",float(command[1]),float(command[2]),set_color(command,5)])
+            cl.append(["glyph","mark",float(command[3]),float(command[4]),set_color(command,5)])
         elif (command[0] == "invisible"):
             cl.append(["invis",float(command[1]),float(command[2])])
         elif (command[0] == "ctext"):
@@ -85,7 +87,7 @@ def plotter(cl):
             case "ylabel":
                 ax.set_ylabel(item[1] + cl[0][2])
             case "line":
-                ax.plot(item[1],item[2],color="black")
+                ax.plot(item[1],item[2],color=item[3])
                 limits=update_limits(limits,item[1][0],item[2][0])
                 limits=update_limits(limits,item[1][1],item[2][1])
             case "invis":
@@ -113,6 +115,6 @@ fh = open(in_file)
 lines = fh.readlines()
 
 command_list = command_parse(lines)
-print(command_list)
+#print(command_list)
 
 plotter(command_list)
