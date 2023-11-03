@@ -44,6 +44,10 @@ def command_parse(data_in):
         elif (command[0] == "line"):
             cl.append(["line",[float(command[1]),float(command[3])],[float(command[2]),float(command[4])],\
                        set_color(command,5)])
+        elif (command[0] == "arrow"):
+            cl.append(["arrow",[float(command[1]),float(command[2]),\
+                        float(command[3]),float(command[4])],\
+                        set_color(command,5)])
         elif (command[0] == "dline"):
             cl.append(["line",[float(command[1]),float(command[3])],[float(command[2]),float(command[4])],\
                        set_color(command,5)])
@@ -90,6 +94,11 @@ def plotter(cl):
                 ax.plot(item[1],item[2],color=item[3])
                 limits=update_limits(limits,item[1][0],item[2][0])
                 limits=update_limits(limits,item[1][1],item[2][1])
+            case "arrow":
+                plt.arrow(item[1][0],item[1][1],item[1][2]-item[1][0],item[1][3]-item[1][1],\
+                          color=item[2])
+                limits=update_limits(limits,item[1][0],item[1][1])
+                limits=update_limits(limits,item[1][2],item[1][3])
             case "invis":
                 limits=update_limits(limits,item[1],item[2])
             case "text":
